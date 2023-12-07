@@ -1,6 +1,4 @@
-from functools import reduce
-
-from utils import readlines, maplist
+from utils import readlines, maplist, multiply
 
 
 def enumerate_wins(time: int, distance: int) -> list[int]:
@@ -27,7 +25,7 @@ def part1(lines: list[str]):
     for time, distance in zip(times, distances):
         margins.append(len(enumerate_wins(time, distance)))
 
-    print(reduce(int.__mul__, margins))
+    print(multiply(margins))
 
 
 def part2(lines: list[str]):

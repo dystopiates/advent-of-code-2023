@@ -1,7 +1,6 @@
 import re
-from functools import reduce
 
-from utils import readlines
+from utils import readlines, multiply
 
 XY = tuple[int, int]
 partnum_re = re.compile(r'(\d+)')
@@ -51,10 +50,7 @@ def get_gear_ratio_muls(schematic: list[str]) -> list[int]:
     for y, row in enumerate(schematic):
         for x, c in enumerate(row):
             if c == '*' and len(ratio := get_adjacent_number_indices(schematic, (x, y))) == 2:
-                ratio_muls.append(reduce(
-                    int.__mul__,
-                    (read_part_number(schematic, xy) for xy in ratio)
-                ))
+                ratio_muls.append(multiply(*(read_part_number(schematic, xy) for xy in ratio)))
 
     return ratio_muls
 

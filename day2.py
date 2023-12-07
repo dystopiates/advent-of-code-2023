@@ -1,6 +1,7 @@
 import re
-from functools import reduce
 from typing import Callable
+
+from utils import multiply
 
 CUBES_re = r'\d+ \w+'
 ROUND_re = rf'{CUBES_re}(, {CUBES_re})*'
@@ -84,7 +85,7 @@ def part1(games: list[Game]):
 
 def part2(games: list[Game]):
     print(sum(
-        reduce(int.__mul__, minimize_cubeset(game.rounds).values())
+        multiply(minimize_cubeset(game.rounds).values())
         for game in games
     ))
 
