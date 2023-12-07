@@ -13,10 +13,9 @@ def get_partnumber_index(schematic: list[str], x: int, y: int) -> XY:
     return x, y
 
 
-def get_adjacent_number_indices(schematic: list[str], xy: XY) -> set[XY]:
+def get_adjacent_number_indices(schematic: list[str], x: int, y: int) -> set[XY]:
     partnumbers: set[XY] = set()
 
-    x, y = xy
     max_y = len(schematic)
     max_x = len(schematic[0])
 
@@ -28,8 +27,7 @@ def get_adjacent_number_indices(schematic: list[str], xy: XY) -> set[XY]:
     return partnumbers
 
 
-def read_part_number(schematic: list[str], xy: XY) -> int:
-    x, y = xy
+def read_part_number(schematic: list[str], x: int, y: int) -> int:
     return int(partnum_re.findall(schematic[y][x:])[0])
 
 
@@ -39,7 +37,7 @@ def get_part_number_locations(schematic: list[str]) -> set[XY]:
     for y, row in enumerate(schematic):
         for x, c in enumerate(row):
             if c not in '0123456789.':
-                part_number_locations = part_number_locations.union(get_adjacent_number_indices(schematic, (x, y)))
+                part_number_locations = part_number_locations.union(get_adjacent_number_indices(schematic, x, y))
 
     return part_number_locations
 
@@ -49,14 +47,14 @@ def get_gear_ratio_muls(schematic: list[str]) -> list[int]:
 
     for y, row in enumerate(schematic):
         for x, c in enumerate(row):
-            if c == '*' and len(ratio := get_adjacent_number_indices(schematic, (x, y))) == 2:
-                ratio_muls.append(multiply(*(read_part_number(schematic, xy) for xy in ratio)))
+            if c == '*' and len(ratio := get_adjacent_number_indices(schematic, x, y)) == 2:
+                ratio_muls.append(multiply((read_part_number(schematic, x, y) for x, y in ratio)))
 
     return ratio_muls
 
 
 def sum_part_numbers(schematic: list[str]) -> int:
-    return sum(read_part_number(schematic, xy) for xy in get_part_number_locations(schematic))
+    return sum(read_part_number(schematic, x, y) for x, y in get_part_number_locations(schematic))
 
 
 def part1(lines: list[str]):
